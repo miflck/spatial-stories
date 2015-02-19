@@ -28,27 +28,16 @@ class testApp : public ofxiOSApp{
     
     
 
-    
+    //Location Service
     ofxiPhoneCoreLocation * coreLocation;
 	
 	float heading;
-    int width;
-    int height;
-	
 	bool hasCompass;
 	bool hasGPS;
-	
-  //  Soundcontroller soundcont;
     
     
     
-	ofImage arrowImg;
-	ofImage compassImg;
-    
-    
-    
-    
-    ofPoint homePosition;
+    //positions
     ofVec2f deviceposition;
     
     

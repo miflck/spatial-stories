@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>47EB2A22-A501-459B-96FF-A8A4764FF437</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SpatialStories</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2CB9C185DB6101F7408DCD02EA619F6C8739A836</key>
+		<string>https://github.com/miflck/spatial-stories.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SpatialStories.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2CB9C185DB6101F7408DCD02EA619F6C8739A836</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/miflck/spatial-stories.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2CB9C185DB6101F7408DCD02EA619F6C8739A836</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2CB9C185DB6101F7408DCD02EA619F6C8739A836</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Spatial%20Stories</string>
+		</dict>
+	</array>
+</dict>
+</plist>

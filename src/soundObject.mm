@@ -8,6 +8,8 @@
 
 #include "soundObject.h"
 #include "soundcontroller.h"
+#include "ofxiOSExtras.h"
+
 
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<int> SoundObject::clickedInsideGlobal = ofEvent<int>();
@@ -64,6 +66,11 @@ SoundObject :: SoundObject ()
     
     
     mindist_mute=0;
+    
+    
+    
+
+    
 
 
     
@@ -80,6 +87,7 @@ SoundObject :: ~SoundObject ()
 
 //--------------------------------------------------------------
 void SoundObject::setup(){
+    
     play_teaser=false;
     play_teaser_before=false;
     teaser_threshold=0.01;
@@ -94,10 +102,7 @@ void SoundObject::setup(){
     
     
     //----------------------------------
-    float scaledTradius=ofMap(teaserradius, 0,0.1, 0,scalefact);
-  
-    
-   
+//    float scaledTradius=ofMap(teaserradius, 0,0.1, 0,scalefact);
     
   }
 
@@ -106,7 +111,7 @@ void SoundObject::setup(){
 //--------------------------------------------------------------
 void SoundObject::update(){
     
-    
+   // cout<<mySound.getIsPlaying()<<endl;
     
     
     ofVec2f tempdir(0,-100);
@@ -129,7 +134,6 @@ void SoundObject::update(){
     }
     
   
-    
     //unloadSound
     if( !isInEarShot(arcDist, radius)){
         mySound.stop();
@@ -185,10 +189,6 @@ void SoundObject::update(){
         // Set Volumes
         mySound.setVolume(gain*actualSoundFade);
         myTeaser.setVolume(teaserGain*actualTeaserFade);
-        
-       
-      
-        
         
         // Start over again
         if(play_teaser!=play_teaser_before){
@@ -281,7 +281,8 @@ void SoundObject::drawCircle(){
     float get_dist=ofClamp(distance, 0,1);
     float dis=ofMap(get_dist, 0,0.1, 0,scalefact);
     float scaledTradius=ofMap(teaserradius, 0,0.1, 0,scalefact);
-    float scaledRadius=ofMap(radius, 0,0.1, 0,scalefact);
+    
+    //float scaledRadius=ofMap(radius, 0,0.1, 0,scalefact);
     
     
     if(mySound.isLoaded()){
@@ -320,20 +321,10 @@ void SoundObject::drawCircle(){
     ofSetColor(255);
     
     
-    //ofSetColor(myColor,150);
-    
-    
     
     float textPosition=(-(nobel.stringWidth(myTitle)/2));
     nobel.drawString(myTitle,textPosition,scaledTradius+15);
-   // nobel.drawString(ofToString(actualTeaserFade),textPosition,scaledTradius+50);
-    
-
-    
-    
     ofPopMatrix();
-
-    
     
 }
 
@@ -433,19 +424,17 @@ string SoundObject::getSoundfile(){
 //--------------------------------------------------------------
 void SoundObject::setSound(string fileName){
     
-   // cout<<"loading sound and teaser "<<"sounds/"+fileName+".wav and "<<"sounds/"+fileName+"_teaser.wav"<<endl;
-   // cout<<"loading sound and teaser "<<"sounds/"+fileName+".mp3 and "<<"sounds/"+fileName+"_teaser.mp3"<<endl;
-    cout<<"loading sound and teaser "<<"sounds/"+fileName+".m4a and "<<"sounds/"+fileName+"_teaser.m4a"<<endl;
+    //cout<<"loading sound and teaser "<<"sounds/"+fileName+".m4a and "<<"sounds/"+fileName+"_teaser.m4a"<<endl;
 
 
     try
     {
-        /*cout<<"loading sound "<<"sounds/"+fileName+".wav"<<endl;
-        mySound.loadSound("sounds/"+fileName+".wav");*/
         
-        cout<<"loading sound "<<"sounds/"+fileName+".m4a"<<endl;
-        //mySound.loadSound("sounds/"+fileName+".mp3");
-        mySound.loadSound("sounds/"+fileName+".m4a");
+        mySound.loadSound(ofxiPhoneGetDocumentsDirectory() +fileName+".m4a");
+
+        
+   //     cout<<"loading sound "<<"sounds/"+fileName+".m4a"<<endl;
+    //    mySound.loadSound("sounds/"+fileName+".m4a");
         
     }
     catch (int e)
@@ -455,15 +444,8 @@ void SoundObject::setSound(string fileName){
     
     try
     {
-        /*cout<<"loading teaser "<<"sounds/"+fileName+"_teaser.wav"<<endl;
-        myTeaser.loadSound("sounds/"+fileName+"_teaser.wav");*/
-        
-      //  cout<<"loading teaser "<<"sounds/"+fileName+"_teaser.mp3"<<endl;
-      //  myTeaser.loadSound("sounds/"+fileName+"_teaser.mp3");
-        
-        cout<<"loading teaser "<<"sounds/"+fileName+"_teaser.m4a"<<endl;
-        myTeaser.loadSound("sounds/"+fileName+"_teaser.m4a");
-
+     //   cout<<"loading teaser "<<"sounds/"+fileName+"_teaser.m4a"<<endl;
+        myTeaser.loadSound(ofxiPhoneGetDocumentsDirectory()+fileName+"_teaser.m4a");
     }
     catch (int e)
     {
@@ -478,20 +460,14 @@ void SoundObject::setSound(string fileName){
     minDistance = 0.001;
     listenerGain = 1.0;
    
-    
     maxTeaserDistance = radius+0.01;
     minTeaserDistance = teaserradius;
-    
-    //mySound.play();
-    //mySound.setPan(ofRandom(0,1));
     
     myTeaser.setLoop(true);
     myTeaser.setVolume(0);
     
     myTeaser.play();
     myTeaser.setPan(ofRandom(0,1));
-    
-    
     
     teaservolume=1;
     soundvolume=0;
@@ -538,41 +514,6 @@ void SoundObject::setRadius(float _radius){
 float SoundObject::getRadius(){
     return radius;
 }
-
-
-
-/*
-
-void SoundObject::crossfadeSounds(){
-
-    
-    if(play_teaser>play_teaser_before){
-    
-        teaservolume=fadeTime*fadestep;
-        
-    }
-
-
-}
-
-
-
-void SoundObject::fadeTeaser(){
-
-}
-
-void SoundObject::fadeSound(){
-
-}
- 
- 
- boolean SoundObject::fadeTo(){
- 
- 
-  }
- 
- 
- */
 
 
 
@@ -668,50 +609,11 @@ float SoundObject::fadeTo(float _fadeTarget, float _actualfade){
         actualfade=target;
         return actualfade;
     }
-    
-   
-    
 
-    
     float fadefact=fadeDistance*fadespeed;
-    
-    //cout<<"ContentId "<<myContentId<<" actualFade "<<actualfade<<" target "<<target<<" dist "<<fadeDistance<<" amt "<<fadefact<<endl;
-
-    //fadefact=ofClamp(fadeammount,-1,1);
-    
     actualfade+=fadefact;
-    
-   
-    /*
-    if(isfadeing){
-        actualFade+=fadeamount;
-        if(actualFade>1 || actualFade<0)endFade();
-        actualFade=ofClamp(actualFade,0,1);
-    }*/
     return actualfade;
 }
-
-
-
-
-
-
-/*
-float SoundObject::fade(){
-    float f=actualFade;
-    if(isfadeing){
-        if(abs(fadeTarget-actualFade)>fadeamount){
-            f=actualFade+fadeamount;
-        }else{
-            f=fadeTarget;
-            endFade();
-        }
-    }
-    cout<<f<<endl;
-    actualFade=f;
-    return f;
-}*/
-
 
 
 
@@ -724,25 +626,6 @@ bool SoundObject::isInEarShot(float _dist, float _radius){
     return earshot;
 }
 
-
-
-
-
-
-//--------------------------------------------------------------
-
-ofVec2f SoundObject::rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle ){
-    
-    float xnew=origin.x+((vec.x-origin.x)*cos(angle)-(origin.y-vec.y)*sin(angle));
-    float ynew=origin.y+((origin.y-vec.y)*cos(angle)-(vec.x-origin.x)*sin(angle));
-    //float xnew=((vec.x-origin.x)*cos(angle)-(origin.y-vec.y)*sin(angle));
-    //float ynew=((origin.y-vec.y)*cos(angle)-(vec.x-origin.x)*sin(angle));
-    
-    ofVec2f newPos;
-    newPos.set(xnew,ynew);
-    
-    return newPos;
-}
 
 
 
@@ -808,13 +691,6 @@ void SoundObject::touchDoubleTap(ofTouchEventArgs & touch){
     ofVec2f mousePos = ofVec2f(touch.x, touch.y);
     
     
-  //  float dlat=ofToFloat("1");
-
-    
-  // ofNotifyEvent(stepOverThreshold, dlat);
-    
-    
-    
 }
 
 //--------------------------------------------------------------
@@ -827,16 +703,7 @@ void SoundObject::mouseMoved(ofMouseEventArgs & args){}
 void SoundObject::mouseDragged(ofMouseEventArgs & args){}
 void SoundObject::mousePressed(ofMouseEventArgs & args){}
 void SoundObject::mouseReleased(ofMouseEventArgs & args){
- /*   ofVec2f mousePos = ofVec2f(args.x, args.y);
-
-    ofNotifyEvent(clickedInsideGlobal, mousePos);
-*/
-    /*if (inside(args.x, args.y)) {
-        // if the mouse is pressed over the circle an event will be notified (broadcasted)
-        // the circleEvent object will contain the mouse position, so this values are accesible to any class that is listening.
-        ofVec2f mousePos = ofVec2f(args.x, args.y);
-        ofNotifyEvent(clickedInsideGlobal, mousePos);
-    }*/
+ 
 }
 
 

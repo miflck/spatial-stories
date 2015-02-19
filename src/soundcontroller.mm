@@ -26,84 +26,87 @@ Soundcontroller :: Soundcontroller ()
     cout << "creating Soundcontroller" << endl;
 }
 
-/*Soundcontroller :: ~Soundcontroller ()
-{
-    cout << "destroying Soundcontroller" << endl;
-}*/
-
-
 
 //--------------------------------------------------------------
 void Soundcontroller::setup(){
-   
+    
+    ofRegisterTouchEvents(this); // this will enable our circle class to listen to the mouse events.
+
+    
     nobel.loadFont("TradeGothicLTCom.ttf", 25,true,true);
+    
+
     displaystring="";
     zoomval=800;
-    //----------------------------------
- //   gui = new ofxUICanvas(0,ofGetHeight(),ofGetWidth(),500);
-   // gui = new ofxUICanvas(0,0,200,ofGetHeight());
     
-    
-    gui = new ofxUICanvas(0,ofGetHeight()-100,ofGetWidth(),100);
+    //-------- GUI ---------
+    gui = new ofxUICanvas(0,0,ofGetWidth(),500);
+    gui->setFont("TradeGothicLTCom.ttf");                     //This loads a new font and sets the GUI font
 
     ofColor pad = ofColor(0,255,0,0);
-    ofColor backgroundcolor = ofColor(255,150);
+    ofColor backgroundcolor = ofColor(255,0,0);
     ofColor outlinecolor = ofColor(255,0,0,200);
     ofColor paddingColor = ofColor(0,0,0,150);
-  //  ofColor fillcolor = ofColor(myColor,200);
     
-    ofColor highlightcolor = ofColor(0,0,0,100);
-    ofColor paddingoutline = ofColor(0,255,0,255);
+    ofColor highlightcolor = ofColor(0,0,0,200);
+    ofColor paddingoutline = ofColor(0,0,0,255);
     
+    gui->setFontSize(OFX_UI_FONT_LARGE, 40);            //These call are optional, but if you want to resize the LARGE, MEDIUM, and SMALL fonts, here is how to do it.
+    gui->setFontSize(OFX_UI_FONT_MEDIUM, 30);
+    gui->setFontSize(OFX_UI_FONT_SMALL, 20);
     
-    
-    gui->setDrawWidgetPadding(1);
+    gui->setDrawWidgetPadding(false);
     gui->setDrawBack(true);
-    gui->setDrawPadding(false);
+    gui->setDrawPadding(true);
     gui->setDrawPaddingOutline(false);
-    gui->setDrawOutline(false);
+    gui->setDrawOutline(true);
 
-    
      gui->setColorBack(backgroundcolor);
-   //  gui->setColorFill(fillcolor);
      gui->setColorOutline(outlinecolor);
      gui->setColorFillHighlight(highlightcolor);
      gui->setColorOutlineHighlight(highlightcolor);
      gui->setColorPadded(pad);
+    gui->setColorOutline(ofColor(0,0,0,255));
+    
      gui->setColorPaddedOutline(paddingoutline);
-     
-    
-    
-
-   gui->addWidgetDown(new ofxUILabel("ZOOMSlider", OFX_UI_FONT_MEDIUM));
-   // gui->addWidgetDown(new ofxUIToggle(32, 32, false, "STOP"));
+    gui->setGlobalSpacerHeight(100);
+    gui->setGlobalSliderHeight(100);
+    gui->setGlobalButtonDimension(100);
+    gui->setColorFill(ofColor(255,200));
     
 
-
-    gui->addWidgetDown(new ofxUISlider("Zoom",100,1000,&zoomval,ofGetWidth()-100,30));
+    
+    gui->addLabel("LOAD TOURS", OFX_UI_FONT_LARGE);
+    vector<string> names;
+    gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    ddl = gui->addDropDownList("TOUR LIST", names);
+    ofxUIRectangle* r=ddl->getRect();
+    r->setHeight(100);
+    ddl->setAllowMultiple(false);
+  
+    gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &Soundcontroller::guiEvent);
  
     
     gui->setVisible(false);
-    gui->setAutoDraw(true);
     
-    
-    compassImg.loadImage("dir.png");
-    compassImg.setAnchorPoint(compassImg.width/2, compassImg.height);
-
-    
-    ofVec2f tempPos(ofGetWidth()/2,0);
-        
-    
-    soundObjects.clear();
-    
-    
-    //INIT OPENAL
-    
+    //INIT Listener
     listenerPos.set(devicePosition);
     listenerDir.set(0,-1,0);
     
-    loadUrl();
+    
+    
+    // ------- Soundobjects ----------------
+    
+    //Temporary Position Object for loading SoundObjets
+    ofVec2f tempPos(ofGetWidth()/2,0);
+    soundObjects.clear(); //clear array
+  
+    loadTourlist();
+    loadUrlwithPath("hello");
+    //  loadUrl(); // load points
+
+    
 
     ofAddListener(SoundObject::clickedInsideGlobal , this, &Soundcontroller::onMouseInAnyCircle);//listening to this event will enable us to get events from any instance of the circle class as this event is static (shared by all instances of the same class).
 
@@ -113,46 +116,13 @@ void Soundcontroller::setup(){
 
     
     
-    /*
-    superTeaser;
-    
-    
-    string lat = points[i]["lat"].asString();
-    string lon = points[i]["lng"].asString();
-    string cont_id = points[i]["content_id"].asString();
-    string title = points[i]["title"].asString();
-    string filename = points[i]["filename"].asString();
-    
-    string sRad = points[i]["radius"].asString();
-    string sTeaserRad = points[i]["teaserradius"].asString();
-    string color = points[i]["color"].asString();
-    
-    
-    
-    float dlat=ofToFloat(lat);
-    float dlng=ofToFloat(lon);
-    int content_id=ofToInt(cont_id);
-    float rad=ofToFloat(sRad);
-    rad/=1000;
-    float teaserradius=ofToFloat(sTeaserRad);
-    teaserradius/=1000;
-    
-    
-    
-    tempPos.set(dlat,dlng);
-    so.setPosition(tempPos);
-    so.setContentId(content_id);
-    so.setIndex(i);
-    
-    so.setTitle(title);
-    so.setSoundfile(filename);
-    so.setTeaserRadius(teaserradius);
-    so.setRadius(rad);
-    so.setColor(color);
-*/
-    
+    //-------- Graphics ---------
+    compassImg.loadImage("dir.png");
+    compassImg.setAnchorPoint(compassImg.width/2, compassImg.height);
     
     cout<<"finished setup soundcontroller"<<endl;
+    
+    
     
 }
 
@@ -186,37 +156,19 @@ void Soundcontroller::update(){
 //--------------------------------------------------------------
 void Soundcontroller::draw(){
     
-    
     ofSetColor(255,255,255);
     
-    
 
-    ofVec2f tempdir(0,0);
-    ofVec2f origin(ofGetWidth()/2,ofGetHeight()/2);
- 
     ofEnableAlphaBlending();
-
-    
-  //  glBlendFunc(GL_ONE, GL_ONE);
-//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    
     for (int i=0;i<soundObjects.size();i++){
      soundObjects[i].draw();
     }
-    
-   // ofDisableAlphaBlending();
-
-    /*
-    for (int i=0;i<soundObjects.size();i++){
-      //  soundObjects[i].gui->draw();
-    }*/
     
     ofDisableAlphaBlending();
 
    // gui->draw();
     
-  //  ofEnableAlphaBlending();
-  //  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  
 
     for (int i=0;i<soundObjects.size();i++){
         soundObjects[i].drawCircle();
@@ -236,12 +188,7 @@ void Soundcontroller::draw(){
     ofCircle(0,0,20);
 	ofPopMatrix();
     ofFill();
-     
     
-    //ofSetColor(0, 0, 0);
-    //ofRect(0, 0, ofGetWidth(), 70);
-    //ofSetColor(255);
-    //nobel.drawString(displaystring,0,50);
     
 }
 
@@ -258,20 +205,6 @@ void Soundcontroller::setDevicePosition(ofVec2f _devicePosition){
 void Soundcontroller::setHeading(float _heading){
     heading=_heading;
     
-}
-
-
-
-
-ofVec2f Soundcontroller::getXY(float _lat, float _lng)
-{
-    float mapWidth=ofGetWidth();
-    float mapHeight=ofGetScreenHeight();
-    
-    float screenX = ((_lng + 180) * (mapWidth  / 360));
-      float screenY =  (((_lat * -1) + 90) * (mapHeight/ 180));
-    
-    return  ofVec2f(screenX,screenY);
 }
 
 
@@ -298,8 +231,6 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
         string sTeaserRad = points[i]["teaserradius"].asString();
         string color = points[i]["color"].asString();
         
-        
-        
         float dlat=ofToFloat(lat);
         float dlng=ofToFloat(lon);
         int content_id=ofToInt(cont_id);
@@ -307,8 +238,6 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
         rad/=1000;
         float teaserradius=ofToFloat(sTeaserRad);
         teaserradius/=1000;
-        
-
         
         tempPos.set(dlat,dlng);
         so.setPosition(tempPos);
@@ -323,75 +252,49 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
         
         soundObjects.push_back(so);
         
-        
-        // irgendwie muss das nachher geschehen weil sonst der Player das file nicht findet.
-        //-> ev weil das laden nicht vor dem verschieben abgeschlossen ist?
-     //   soundObjects[soundObjects.size()-1].setup();
-        
      }
 }
 
 
-/*
 //--------------------------------------------------------------
 
-ofVec2f Soundcontroller::rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle ){
+void Soundcontroller::loadUrlwithPath(string _path){
     
-    float xnew=origin.x+((vec.x-origin.x)*cos(angle)-(origin.y-vec.y)*sin(angle));
-    float ynew=origin.y+((origin.y-vec.y)*cos(angle)-(vec.x-origin.x)*sin(angle));
-    //float xnew=((vec.x-origin.x)*cos(angle)-(origin.y-vec.y)*sin(angle));
-    //float ynew=((origin.y-vec.y)*cos(angle)-(vec.x-origin.x)*sin(angle));
-    
-    ofVec2f newPos;
-    newPos.set(xnew,ynew);
-    
-    return newPos;
-}
-
-*/
-
-
-//--------------------------------------------------------------
-
-void Soundcontroller::loadUrl(){
-
-   std:: string url = "http://leichtbautester.michaelflueckiger.ch/frontend/getPoints";
- //  std:: string url = "http://huggler.michaelflueckiger.ch/frontend/getPoints";
+    std:: string url = "http://spatialstories.michaelflueckiger.ch/frontend/getPoints?mypath="+_path;
     
     bool parsingSuccessful=result.open(url);
     cout <<"parsing "<<parsingSuccessful<<endl;
-  
     
-	if (!response.open(url)) {
-		cout  << "Failed to parse JSON\n No Response…" << endl;
+    
+    if (!response.open(url)) {
+        cout  << "Failed to parse JSON\n No Response…" << endl;
         ofFile file(ofxiPhoneGetDocumentsDirectory() +"mySavedPoints.txt",ofFile::ReadOnly);
         ofBuffer buff = file.readToBuffer();
         result=buff.getText();
         setPoints(result);
-
-	}
+        
+    }
     
-
+    
     if ( parsingSuccessful )
     {
-    cout << result.getRawString() << endl;
-
-        cout<<ofxiPhoneGetDocumentsDirectory()<<endl;
+        cout << result.getRawString() << endl;
         
-       ofFile file(ofxiPhoneGetDocumentsDirectory() +"mySavedPoints.txt",ofFile::WriteOnly);
+        cout<<ofxiPhoneGetDocumentsDirectory()<<endl;
+        ofFile file(ofxiPhoneGetDocumentsDirectory() +"mySavedPoints.txt",ofFile::WriteOnly);
         file << response.getRawString() << endl;
         file.close();
-
+        
         setPoints(result);
         for(int i=0;i<soundObjects.size();i++){
             //soundObjects[i].setSound(soundObjects[i].getSoundfile());
             soundObjects[i].setup();
-
+            
         }
-	}
+    }
     else
     {
-		cout  << "Failed to parse JSON. Try local" << endl;
+        cout  << "Failed to parse JSON. Try local" << endl;
         bool parsingSuccessful=result.open(ofxiPhoneGetDocumentsDirectory()+"mySavedPoints.txt");
         setPoints(result);
         for(int i=0;i<soundObjects.size();i++){
@@ -399,29 +302,54 @@ void Soundcontroller::loadUrl(){
             soundObjects[i].setup();
         }
         
-	}
+    }
 }
+
+
+
+
+//--------------------------------------------------------------
+
+void Soundcontroller::loadTourlist(){
+    
+    std:: string url = "http://spatialstories.michaelflueckiger.ch/frontend/getTours";
+    
+    bool parsingSuccessful=result.open(url);
+    cout <<"parsing "<<parsingSuccessful<<endl;
+    
+    
+    if (!response.open(url)) {
+        cout  << "Failed to parse JSON\n No Response…" << endl;
+
+        
+    }
+    
+    
+    if ( parsingSuccessful )
+    {
+       cout << result.getRawString() << endl;
+        ofxJSONElement listelements =result;
+        cout<<"there are "<<listelements.size()<<" tours"<<endl;
+        for(int i=0; i<listelements.size(); i++)
+        {
+        string url = listelements[i]["url"].asString();
+        ddl->addToggle(url);
+        }
+    }
+    else
+    {
+    cout  << "Failed to parse JSON. Try local" << endl;
+    }
+}
+
+
+
+
 
 //--------------------------------------------------------------
 void Soundcontroller::onMouseInAnyCircle(int & e){
     displaystring="clicked in"+ofToString(e);
     cout<<"clicked in"<<e<<endl;
-
-    
-    
-   /* if(soundObjects[e].mySound.getIsPlaying()){
-        cout<<"set Mute"<<e<<endl;
-
-    for(int i=0;i<soundObjects.size();i++){
-        soundObjects[i].setMute(true);
-
-    }
-    }else{
-        for(int i=0;i<soundObjects.size();i++){
-            soundObjects[i].setMute(false);
-        }
-    
-    }*/
     
 }
 
@@ -440,7 +368,6 @@ void Soundcontroller::onSteppedOverAnyThreshold(int & e){
     }
 
     
-  //  gui->toggleVisible();
 }
 
 
@@ -451,27 +378,7 @@ void Soundcontroller::onSteppedOverAnyThreshold(int & e){
 //--------------------------------------------------------------
 void Soundcontroller::onSteppedOutAnyThreshold(int & e){
     cout<<"someone stepped over the threshold of"<<e<<endl;
-    //  gui->toggleVisible();
-    
-    
      soundObjects[e].setFadeSpeed(0.05);
-    
-   /* displaystring="stepped out "+ofToString(e);
-    bool inside=false;
-   
-    for(int i=0;i<soundObjects.size();i++){
-        if( soundObjects[i].getIsInside()){
-            inside=true;
-        }
-    }
-    
-    if(!inside){
-    for(int i=0;i<soundObjects.size();i++){
-      //  soundObjects[i].setMute(false);
-    }
-    }
-*/
-
 }
 
 //--------------------------------------------------------------
@@ -489,19 +396,12 @@ void Soundcontroller::checkMuteSounds(){
     
     if(!inside){
         for(int i=0;i<soundObjects.size();i++){
-           // soundObjects[i].setMute(false);
-           // soundObjects[i].setTeaserFadeTarget(1);
-            
-           // if(i!=index){
-                soundObjects[i].setFadeSpeed(0.05);
-                soundObjects[i].setTeaserFadeTarget(1);
-           // }
-
+        soundObjects[i].setFadeSpeed(0.05);
+        soundObjects[i].setTeaserFadeTarget(1);
         }
     }else{
     
         for(int i=0;i<soundObjects.size();i++){
-            //soundObjects[i].setMute(true);
             if(i!=index){
                 soundObjects[i].setFadeSpeed(0.05);
                 soundObjects[i].setTeaserFadeTarget(0.095);
@@ -546,14 +446,60 @@ float Soundcontroller::getDistance(float lat1,float lon1,float lat2, float lon2)
     return d;
 }
 
+
+
+
+
+
+//--------------------------------------------------------------
+void Soundcontroller::touchDown(ofTouchEventArgs & touch){
+    
+    if(touch.id==2){
+        gui->toggleVisible();
+    }
+    
+    
+    
+}
+
+//--------------------------------------------------------------
+void Soundcontroller::touchMoved(ofTouchEventArgs & touch){
+    
+    
+    
+}
+
+//--------------------------------------------------------------
+void Soundcontroller::touchUp(ofTouchEventArgs & touch){
+    
+    
+}
+
+//--------------------------------------------------------------
+void Soundcontroller::touchDoubleTap(ofTouchEventArgs & touch){
+    }
+
+//--------------------------------------------------------------
+void Soundcontroller::touchCancelled(ofTouchEventArgs & touch){
+    
+}
+
+
+void Soundcontroller::mouseMoved(ofMouseEventArgs & args){}
+void Soundcontroller::mouseDragged(ofMouseEventArgs & args){}
+void Soundcontroller::mousePressed(ofMouseEventArgs & args){}
+void Soundcontroller::mouseReleased(ofMouseEventArgs & args){}
+
+
 //--------------------------------------------------------------
 void Soundcontroller::guiEvent(ofxUIEventArgs &e)
 {
     
     
+    
    string name= e.widget->getName();
 	int kind = e.widget->getKind();
-    //cout<<kind<<endl;
+    cout<<kind<<endl;
     
     if(kind==OFX_UI_WIDGET_ROTARYSLIDER){
         ofxUIRotarySlider *slider =(ofxUIRotarySlider*)e.widget;
@@ -574,6 +520,28 @@ void Soundcontroller::guiEvent(ofxUIEventArgs &e)
         
     }
 
+    
+    if(name == "SHOW ACTIVE")
+    {
+        cout<<"show active"<<endl;
+        ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
+        ddl->setShowCurrentSelected(toggle->getValue());
+    }
+    
+    
+    
+    if(name =="TOUR LIST")
+    {
+        ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
+        vector<ofxUIWidget *> &selected = ddlist->getSelected();
+        for(int i = 0; i < selected.size(); i++)
+        {
+            cout << "SELECTED: " << selected[i]->getName() << endl;
+            loadUrlwithPath(selected[i]->getName());
+        }
+    }
+
+    
     
     
     

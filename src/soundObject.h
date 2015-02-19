@@ -18,21 +18,9 @@
 #include "ofxiOSSoundPlayer3D.h"
 
 
-/*
-struct soundPoint{
-    ofVec2f myPosition;
-    float distance;
-    float direction;
-    string myname;
-    int myId;
-    bool closest;
-    bool isplaying;
-
-};*/
-
 
 class SoundObject{
-	
+
 public:
     
     SoundObject ();
@@ -71,77 +59,61 @@ void draw();
     void touchCancelled(ofTouchEventArgs & touch);
     
     
+    void loadSound(string fileName);
+    void loadTeaser(string fileName);
 
-    //ofxUICanvas *gui;
-    //void guiEvent(ofxUIEventArgs &e);
-    
-    
-void loadSound(string fileName);
-void loadTeaser(string fileName);
+    void setSound(string fileName);
 
-void setSound(string fileName);
+    
+    void setContentId(int _id);
+    int getContentId();
+    int myContentId;
+    
 
-void setContentId(int _id);
-int getContentId();
-int myContentId;
-    
-    
-    float teaserPlusRadius;
-    float teaserOriginalRadius;
     
     void setIndex(int _index);
     int getIndex();
-    
     int myIndex;
     
-string myTitle;
-string mySoundfile;
 
-void setTitle(string _title);
-string getTitle();
-    
+    // --- Sound File ----
     void setSoundfile(string _soundfile);
     string getSoundfile();
+    string mySoundfile;
     
-    
+    void setTitle(string _title);
+    string getTitle();
+    string myTitle;
+
     
     void setColor(string _color);
     ofColor myColor;
     
     
-ofxiOSSoundPlayer mySound;
-ofxiOSSoundPlayer myTeaser;
-ofxiOSSoundPlayer synth;
+    ofxiOSSoundPlayer mySound;
+    ofxiOSSoundPlayer myTeaser;
+    ofxiOSSoundPlayer synth;
 
-
-    
     ofTrueTypeFont nobel;
-    ofTrueTypeFont  franklinBook14;
 
-
-
-    
 
     ofImage radiusImg;
 
     
-    
-    
-void setPosition(ofVec2f _newPosition);
-ofVec2f getPosition();
+    // Position
+    void setPosition(ofVec2f _newPosition);
+    ofVec2f getPosition();
 
     
-    
-ofVec2f devicePosition;
-void setDevicePosition(ofVec2f _devicePosition);
-    
-void setDeviceHeading(float _heading);
-
-void setHeading(float _heading);
+    // Device Position
+    ofVec2f devicePosition;
+    void setDevicePosition(ofVec2f _devicePosition);
+    void setDeviceHeading(float _heading);
+    void setHeading(float _heading);
     
     
-void setDistance(float _myDistance);
-void setDirection(float _myDirection);
+    void setDistance(float _myDistance);
+    void setDirection(float _myDirection);
     
 
     
@@ -149,7 +121,10 @@ void setDirection(float _myDirection);
     float getDistance();
    
     
-ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
+    //-------- Teaser -----------
+    // Teaser Radius In and Out
+    float teaserPlusRadius;
+    float teaserOriginalRadius;
     
     bool getPlayTeaser();
     void setPlayTeaser(bool _setplayteaser);
@@ -157,17 +132,15 @@ ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
     float getTeaserThreshold();
     void setTeaserThreshold(float _teaserthreshold);
 
-    
     float getTeaserRadius();
     void setTeaserRadius(float _teaserradius);
- 
-    float teaserradius;
+     float teaserradius;
     
     float getRadius();
     void setRadius(float _radius);
     
+    
     float radius;
-
     void crossfadeSounds();
 
     
@@ -188,17 +161,10 @@ ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
 
     float originalVolume;
     
-    
     //this function checks if the passed arguments are inside the circle.
     bool inside(float _x, float _y );
-    
     bool isInEarShot(float _dist, float _radius);
-    
-    
-    
     void setSacleFact(float _scalefact);
-    
-    
     void drawCircle();
     
   
@@ -294,11 +260,6 @@ private:
     float soundvolume;
     
     float soundpos;
-
-    
-   // float getDistance(float lon1,float lat1, float lon2, float lat2);
-   // float getDirection(float lon1,float lat1, float lon2, float lat2);
-    
     
     float getArcDirection(float lon1,float lat1, float lon2, float lat2);
     float getArcDistance(float lon1,float lat1, float lon2, float lat2);

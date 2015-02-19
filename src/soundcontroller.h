@@ -20,6 +20,8 @@
 #include "ofxUI.h"
 #include "soundObject.h"
 #include "ofxJSONElement.h"
+#include "ofxGui.h"
+
 
 //for convenience
 #define APPC Soundcontroller::getInstance()
@@ -38,39 +40,75 @@ struct soundPoint{
 
 class Soundcontroller {
     
-
-	
 public:
-    
-   // Soundcontroller ();
-  //  ~Soundcontroller ();
-    
 static Soundcontroller* getInstance();
 
-    
+  // OF  Functions
 void setup();
 void update();
 void draw();
-void setDevicePosition(ofVec2f _devicePosition);
-void setHeading(float _heading);
-    
-void loadUrl();
     
     
+    
+    
+    //We need to declare all this mouse events methods to be able to listen to mouse events.
+    //All this must be declared even if we are just going to use only one of this methods.
+    void mouseMoved(ofMouseEventArgs & args);
+    void mouseDragged(ofMouseEventArgs & args);
+    void mousePressed(ofMouseEventArgs & args);
+    void mouseReleased(ofMouseEventArgs & args);
+    
+    
+    void touchDown(ofTouchEventArgs & touch);
+    void touchMoved(ofTouchEventArgs & touch);
+    void touchUp(ofTouchEventArgs & touch);
+    void touchDoubleTap(ofTouchEventArgs & touch);
+    void touchCancelled(ofTouchEventArgs & touch);
+    
+    
+    
+  // Location
+    ofVec2f devicePosition;
+    void setDevicePosition(ofVec2f _devicePosition);
+   
+    float heading;
+    void setHeading(float _heading);
+    
+
+    //Location Helper
+    float getDistance(float lon1,float lat1, float lon2, float lat2);
+    float distance;
+    
+    float getDirection(float lon1,float lat1, float lon2, float lat2);
+    float direction;
     
 
     void checkMuteSounds();
     
-void setPoints(ofxJSONElement _result);
-ofxJSONElement result;
-ofxJSONElement  response;
+    
+    //Soundpoints
+    // Load and set Points
+    void loadUrl();
 
-
-    std::vector<ofImage> images;
+    void loadUrlwithPath(string _path);
 
     
-float heading;
-ofVec2f devicePosition; 
+    void setPoints(ofxJSONElement _result);
+    ofxJSONElement result;
+    ofxJSONElement  response;
+    
+    
+    
+    
+    void loadTourlist();
+
+    
+
+
+    int numberOfSounds;
+    vector<SoundObject > soundObjects;
+    SoundObject superTeaser;
+    
     
     int soundsSize;
     
@@ -78,25 +116,14 @@ ofVec2f devicePosition;
 ofVec2f listenerPos;
 ofVec3f listenerDir;
 
-int numberOfSounds;
-//vector<soundPoint>  soundPoints;
 
-vector<SoundObject > soundObjects;
+  //  std::vector<ofImage> images;
+
     
+
     
-    SoundObject superTeaser;
-    
-    
-    
-float getDistance(float lon1,float lat1, float lon2, float lat2);
-float distance;
-    
-float getDirection(float lon1,float lat1, float lon2, float lat2);
-float direction;
-    
-    ofVec2f getXY(float _lat, float _lng);
-    
-    ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
+    //ofVec2f getXY(float _lat, float _lng);
+   // ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
 
    
 	ofImage compassImg;
@@ -106,7 +133,12 @@ float direction;
     
     
     ofxUICanvas *gui;
-	void guiEvent(ofxUIEventArgs &e);
+    ofxUIDropDownList *ddl;
+
+    void guiEvent(ofxUIEventArgs &e);
+    
+    
+    
     
     ofTrueTypeFont nobel;
 
@@ -122,10 +154,12 @@ float direction;
 
     
     float zoomval;
-    
-    
     float getSoundObjectByTitle(string title);
 
+    
+    
+  
+    
     
     
 private:
