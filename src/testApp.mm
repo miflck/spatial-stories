@@ -77,7 +77,7 @@ void testApp::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs & touch){
    APPC->gui->toggleVisible();
-  //  cout<<"add"<<endl;
+   //cout<<"add"<<endl;
   // APPC->ddl->addToggle(ofGetTimestampString());
 
 }

@@ -51,9 +51,9 @@ void Soundcontroller::setup(){
     ofColor highlightcolor = ofColor(0,0,0,200);
     ofColor paddingoutline = ofColor(0,0,0,255);
     
-    gui->setFontSize(OFX_UI_FONT_LARGE, 40);            //These call are optional, but if you want to resize the LARGE, MEDIUM, and SMALL fonts, here is how to do it.
-    gui->setFontSize(OFX_UI_FONT_MEDIUM, 30);
-    gui->setFontSize(OFX_UI_FONT_SMALL, 20);
+    gui->setFontSize(OFX_UI_FONT_LARGE, 30);            //These call are optional, but if you want to resize the LARGE, MEDIUM, and SMALL fonts, here is how to do it.
+    gui->setFontSize(OFX_UI_FONT_MEDIUM, 20);
+    gui->setFontSize(OFX_UI_FONT_SMALL, 15);
     
     gui->setDrawWidgetPadding(false);
     gui->setDrawBack(true);
@@ -69,9 +69,9 @@ void Soundcontroller::setup(){
     gui->setColorOutline(ofColor(0,0,0,255));
     
      gui->setColorPaddedOutline(paddingoutline);
-    gui->setGlobalSpacerHeight(100);
-    gui->setGlobalSliderHeight(100);
-    gui->setGlobalButtonDimension(100);
+    gui->setGlobalSpacerHeight(50);
+    gui->setGlobalSliderHeight(50);
+    gui->setGlobalButtonDimension(50);
     gui->setColorFill(ofColor(255,200));
     
 
@@ -81,14 +81,14 @@ void Soundcontroller::setup(){
     gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
     ddl = gui->addDropDownList("TOUR LIST", names);
     ofxUIRectangle* r=ddl->getRect();
-    r->setHeight(100);
+    r->setHeight(50);
     ddl->setAllowMultiple(false);
   
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &Soundcontroller::guiEvent);
  
     
-    gui->setVisible(false);
+    gui->setVisible(true);
     
     //INIT Listener
     listenerPos.set(devicePosition);

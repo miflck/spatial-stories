@@ -883,6 +883,7 @@
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				PRODUCT_NAME = SpatialStories;
 				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos8.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv6 armv7";
 			};
@@ -911,6 +912,7 @@
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				PRODUCT_NAME = SpatialStories;
 				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos8.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv6 armv7";
 			};

@@ -685,7 +685,7 @@ void SoundObject::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void SoundObject::touchDoubleTap(ofTouchEventArgs & touch){
     
- // APPC->gui->toggleVisible();
+ APPC->gui->toggleVisible();
     
     
     ofVec2f mousePos = ofVec2f(touch.x, touch.y);
