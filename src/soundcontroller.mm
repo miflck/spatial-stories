@@ -31,6 +31,7 @@ Soundcontroller :: Soundcontroller ()
 void Soundcontroller::setup(){
     
     ofRegisterTouchEvents(this); // this will enable our circle class to listen to the mouse events.
+    ofRegisterURLNotification(this);
 
     
     nobel.loadFont("TradeGothicLTCom.ttf", 25,true,true);
@@ -68,7 +69,7 @@ void Soundcontroller::setup(){
      gui->setColorPadded(pad);
     gui->setColorOutline(ofColor(0,0,0,255));
     
-     gui->setColorPaddedOutline(paddingoutline);
+    gui->setColorPaddedOutline(paddingoutline);
     gui->setGlobalSpacerHeight(50);
     gui->setGlobalSliderHeight(50);
     gui->setGlobalButtonDimension(50);
@@ -77,6 +78,8 @@ void Soundcontroller::setup(){
 
     
     gui->addLabel("LOAD TOURS", OFX_UI_FONT_LARGE);
+    gui->addToggle("LOAD AUDIO", false, 44, 44);
+
     vector<string> names;
     gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
     ddl = gui->addDropDownList("TOUR LIST", names);
@@ -103,8 +106,12 @@ void Soundcontroller::setup(){
     soundObjects.clear(); //clear array
   
     loadTourlist();
-    loadUrlwithPath("hello");
+   // loadUrlwithPath("hello");
     //  loadUrl(); // load points
+    
+  //  loadAudioUrlwithPath("hallo.m4a");
+    
+
 
     
 
@@ -122,6 +129,7 @@ void Soundcontroller::setup(){
     
     cout<<"finished setup soundcontroller"<<endl;
     
+    bLoadAudio=false;
     
     
 }
@@ -215,7 +223,28 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
   soundObjects.clear();
       
     cout<<"there are "<<points.size()<<" sounds"<<endl;
-      
+    
+    //check for Audiofiles:
+    for(int i=0; i<points.size(); i++)
+    {
+        string filepath = points[i]["filepath"].asString();
+        vector <string> rawfile= ofSplitString(filepath, "/");
+        
+        string file = ofSplitString(rawfile.back(), "_")[0];
+        string ending = ofSplitString(rawfile.back(), ".")[1];
+
+        string corefile=file+"."+ending;
+        string teaserfile = file+"_teaser."+ending;
+
+        ofDirectory coredir(ofxiPhoneGetDocumentsDirectory() +corefile);
+        ofDirectory teaserdir(ofxiPhoneGetDocumentsDirectory() +teaserfile);
+
+        cout<<"i want "<<corefile<<" "<<teaserfile<<endl;
+        if(!coredir.exists() && corefile!="nofile" && bLoadAudio)loadAudioUrlwithPath(corefile);
+        if(!teaserdir.exists() && teaserfile!="nofile" && bLoadAudio)loadAudioUrlwithPath(teaserfile);
+    }
+    
+    
     ofVec2f tempPos(ofGetWidth()/2,0);
     
     SoundObject so;
@@ -307,6 +336,89 @@ void Soundcontroller::loadUrlwithPath(string _path){
 
 
 
+void Soundcontroller::urlResponse(ofHttpResponse & response) {
+    
+    cout<<"------------------URL Response----------"<<endl;
+    cout<<response.request.name<<endl;
+    cout<<response.request.url<<endl;
+
+    if (response.status==200 && response.request.name == "async_req") {
+        cout<<"loaded"<<endl;
+       // cout<<response.data<<endl;
+        //img.loadImage(response.data);
+       // loading = false;
+    } else {
+        cout <<"--ASYNC ERROR------------- status"<< response.status << " " << response.error << endl;
+    //    if (response.status != -1) loading = false;
+    }
+}
+
+//--------------------------------------------------------------
+
+void Soundcontroller::loadAudioUrlwithPath(string _path){
+    
+    cout<<"loading audiofile"<<endl;
+    
+  //  std:: string url = "http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path;
+    
+  //  int id = ofLoadURLAsync("http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path,
+  //                          "async_req");
+    string DDoSTarget = "http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path;
+
+    
+ //  string URL                 = '[http://www.w3schools.com/xml/note.xml';](http://www.w3schools.com/xml/note.xml';)
+    
+  //  ofLoadURLAsync(DDoSTarget, "async_req");
+    ofSaveURLAsync(DDoSTarget, ofxiPhoneGetDocumentsDirectory()+_path);
+
+    
+    
+/*    bool parsingSuccessful=result.open(url);
+    cout <<"parsing audio"<<parsingSuccessful<<endl;
+    
+    
+    if (!response.open(url)) {
+        cout  << "Failed to parse Audio No Response…" << endl;
+        ofFile file(ofxiPhoneGetDocumentsDirectory() +_path,ofFile::ReadOnly);
+        ofBuffer buff = file.readToBuffer();
+        result=buff.getText();
+        setPoints(result);
+        
+    }
+    
+    
+    if ( parsingSuccessful )
+    {
+        cout << result.getRawString() << endl;
+        
+      //  cout<<ofxiPhoneGetDocumentsDirectory()<<endl;
+      //  ofFile file(ofxiPhoneGetDocumentsDirectory() +"mySavedPoints.txt",ofFile::WriteOnly);
+   //     file << response.getRawString() << endl;
+     //   file.close();
+        
+        //setPoints(result);
+        for(int i=0;i<soundObjects.size();i++){
+            //soundObjects[i].setSound(soundObjects[i].getSoundfile());
+          //  soundObjects[i].setup();
+            
+        }
+    }
+    else
+    {
+        cout  << "Failed to parse JSON. Try local" << endl;
+    //    bool parsingSuccessful=result.open(ofxiPhoneGetDocumentsDirectory()+"mySavedPoints.txt");
+      //  setPoints(result);
+        for(int i=0;i<soundObjects.size();i++){
+        //    soundObjects[i].setSound(soundObjects[i].getSoundfile());
+         //   soundObjects[i].setup();
+        }
+        
+    }
+ */
+}
+
+
+
 
 //--------------------------------------------------------------
 
@@ -320,8 +432,6 @@ void Soundcontroller::loadTourlist(){
     
     if (!response.open(url)) {
         cout  << "Failed to parse JSON\n No Response…" << endl;
-
-        
     }
     
     
@@ -360,9 +470,7 @@ void Soundcontroller::onSteppedOverAnyThreshold(int & e){
     displaystring="stepped over "+ofToString(e);
     
     
-    soundObjects[e].setFadeSpeed(0.05);
-
-    
+    soundObjects[e].setFadeSpeed(0.05);    
     for(int i=0;i<soundObjects.size();i++){
         //soundObjects[i].setMute(true);
     }
@@ -542,6 +650,11 @@ void Soundcontroller::guiEvent(ofxUIEventArgs &e)
     }
 
     
+    if(name == "LOAD AUDIO")
+    {
+        ofxUILabelToggle *toggle = (ofxUILabelToggle *) e.widget;
+        bLoadAudio = toggle->getValue();
+    }
     
     
     

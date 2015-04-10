@@ -881,10 +881,11 @@
 					../../../addons/ofxJSON/src,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = SpatialStories;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos8.1;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Debug;
@@ -910,10 +911,11 @@
 					../../../addons/ofxJSON/src,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = SpatialStories;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos8.1;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Release;

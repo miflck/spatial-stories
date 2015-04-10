@@ -89,21 +89,20 @@ void draw();
     //Soundpoints
     // Load and set Points
     void loadUrl();
-
     void loadUrlwithPath(string _path);
-
+    
+    
+    bool bLoadAudio;
+    void loadAudioUrlwithPath(string _path);
+    void urlResponse(ofHttpResponse & response);
+    
+    
     
     void setPoints(ofxJSONElement _result);
     ofxJSONElement result;
     ofxJSONElement  response;
     
-    
-    
-    
     void loadTourlist();
-
-    
-
 
     int numberOfSounds;
     vector<SoundObject > soundObjects;
@@ -112,60 +111,37 @@ void draw();
     
     int soundsSize;
     
-//ofxOpenALSoundPlayer sounds[SOUNDSSIZE];
-ofVec2f listenerPos;
-ofVec3f listenerDir;
+    //ofxOpenALSoundPlayer sounds[SOUNDSSIZE];
+    ofVec2f listenerPos;
+    ofVec3f listenerDir;
 
-
-  //  std::vector<ofImage> images;
-
-    
-
-    
-    //ofVec2f getXY(float _lat, float _lng);
-   // ofVec2f rotateAroundAxis(ofVec2f vec,ofVec2f origin, float angle );
-
-   
 	ofImage compassImg;
-
-    
     string displaystring;
     
     
     ofxUICanvas *gui;
     ofxUIDropDownList *ddl;
+    
+    
 
     void guiEvent(ofxUIEventArgs &e);
     
-    
-    
-    
     ofTrueTypeFont nobel;
 
-    
-    
     bool drawPadding;
 	float red, green, blue; 	
     int closestSoundPointId;    
     
     void onMouseInAnyCircle(int & e);
-   void onSteppedOverAnyThreshold(int & e);
+    void onSteppedOverAnyThreshold(int & e);
     void onSteppedOutAnyThreshold(int & e);
-
     
     float zoomval;
     float getSoundObjectByTitle(string title);
 
     
-    
-  
-    
-    
-    
 private:
     Soundcontroller ();
 	static Soundcontroller* instance;
 
-
-    
 };

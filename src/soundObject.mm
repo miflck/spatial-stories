@@ -46,7 +46,6 @@ SoundObject :: SoundObject ()
     soundFadeTarget=0;
     
     
-    
     bismute=false;
     muteVolume=0.1;
     
@@ -55,13 +54,12 @@ SoundObject :: SoundObject ()
     teaserPlusRadius=0.006;
     teaserOriginalRadius=10;
     
-    
     nobel.loadFont("TradeGothicLTCom.ttf", 25,true,true);
     
     radiusImg.loadImage("radius.png");
     radiusImg.setAnchorPoint(radiusImg.width/2, radiusImg.height/2);
     
-      bRegisteredEvents = false;
+    bRegisteredEvents = false;
 
     
     
@@ -94,15 +92,12 @@ void SoundObject::setup(){
     teaservolume=1;
     soundvolume=0;
     
-    if(!bRegisteredEvents) {
+   /* if(!bRegisteredEvents) {
         ofRegisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
         ofRegisterTouchEvents(this); // this will enable our circle class to listen to the mouse events.
         bRegisteredEvents = true;
-    }
+    }*/
     
-    
-    //----------------------------------
-//    float scaledTradius=ofMap(teaserradius, 0,0.1, 0,scalefact);
     
   }
 
@@ -111,8 +106,7 @@ void SoundObject::setup(){
 //--------------------------------------------------------------
 void SoundObject::update(){
     
-   // cout<<mySound.getIsPlaying()<<endl;
-    
+   //
     
     ofVec2f tempdir(0,-100);
     tempdir.rotate(heading+90); //wieso auch immer…
@@ -193,7 +187,6 @@ void SoundObject::update(){
         // Start over again
         if(play_teaser!=play_teaser_before){
             if(!play_teaser){
-                //Start Playing Interview
               //  ofNotifyEvent(stepOverThreshold, myIndex);
                 isInside=true;
                 mySound.setPosition(0);
@@ -214,8 +207,6 @@ void SoundObject::update(){
                 setTeaserFadeTarget(1);
                 //ofNotifyEvent(stepOutThreshold, myIndex);
             }
-            
-            cout<<"Change Teasersound "<<play_teaser<<" "<<play_teaser_before<<endl;
         }
     }
     
@@ -238,7 +229,6 @@ void SoundObject::draw(){
     float dis=ofMap(get_dist, 0,0.1, 0,scalefact);
     float scaledTradius=ofMap(teaserradius, 0,0.1, 0,scalefact);
     float scaledOrigTradius=ofMap(teaserOriginalRadius, 0,0.1, 0,scalefact);
-
     float scaledRadius=ofMap(radius, 0,0.1, 0,scalefact);
     
 
@@ -306,13 +296,6 @@ void SoundObject::drawCircle(){
     ofPushStyle();
     ofTranslate(0, 0);
     ofSetColor(myColor,20);
-   /* ofCircle(0, 0,scaledTradius*0.2);
-    ofCircle(0, 0,scaledTradius*0.4);
-    ofCircle(0, 0,scaledTradius*0.6);
-    ofCircle(0, 0,scaledTradius*0.8);
-
-    ofCircle(0, 0,scaledTradius);
-*/
     ofPopStyle();
     
     ofFill();
@@ -882,111 +865,3 @@ void SoundObject::drawArcStrip(float percent, ofVec2f center, float radius)
     ofPopMatrix();
 }
 
-
-
-/*
-//--------------------------------------------------------------
-void SoundObject::guiEvent(ofxUIEventArgs &e)
-{
-    
-    
-    if(!e.widget->getName().compare("POSITION"))
-    {
-        //ofxUIButton *button = (ofxUIButton *) e.widget;
-     //   loadUrl();
-        //cout<<"button"<<endl;
-        
-        ofxUIRotarySlider *slider =(ofxUIRotarySlider*)e.widget;
-        mySound.setPosition(slider->getScaledValue());
-       
-        
-    }
-    
-    
-    if(!e.widget->getName().compare("STOPP"))
-    {
-        cout<<"button!"<<endl;
-        
-        ofxUIImageButton *button = (ofxUIImageButton *) e.widget;
-        bool isDown= button->getValue();
-        
-        /*   if(isDown){
-         for(int i=0;i<numberOfSounds;i++){
-         if( soundPoints[i].closest){
-         cout<<soundPoints[i].isplaying<<endl;
-         if(soundPoints[i].isplaying){
-         //                   sounds[i].stop();
-         soundPoints[i].isplaying=false;
-         cout<<"sounds "<<i<<" stopped"<<endl;
-         }else{
-         //                 sounds[i].play();
-         soundPoints[i].isplaying=true;
-         cout<<"sounds "<<i<<" start"<<endl;
-         
-         }
-         }
-         }
-         }*/
-        
-        
-        /*
-         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-         bool val = toggle->getValue();
-         
-         if(val){
-         
-         for(int i=0;i<SOUNDSSIZE;i++){
-         if( soundPoints[i].closest){
-         sounds[i].stop();
-         cout<<"sounds "<<i<<" stopped"<<endl;
-         }
-         }
-         
-         }else {
-         for(int i=0;i<SOUNDSSIZE;i++){
-         if( soundPoints[i].closest){
-         sounds[i].play();
-         cout<<"sounds "<<i<<" started"<<endl;
-         }
-         }
-         
-         }*/
- //   }
-    
-    
-//}
-
-
-/*
-
-float SoundObject::getDirection(float lat1,float lon1,float lat2, float lon2){
- 
-    float dLat = ofDegToRad(lat2-lat1);
-    float dLon = ofDegToRad(lon2-lon1);
-    lat1 = ofDegToRad(lat1);
-    lat2 = ofDegToRad(lat2);
-    
-    float y = sin(dLon) * cos(lat2);
-    float x = cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)*cos(dLon);
-    float brng = ofRadToDeg(atan2(y, x));
-    
-    return brng;
-    
-}*/
-
-//--------------------------------------------------------------
-/*
-
-float SoundObject::getDistance(float lat1,float lon1,float lat2, float lon2){
-    
-    int R = 6371; // km
-    float dLat = ofDegToRad(lat2-lat1);
-    float dLon = ofDegToRad(lon2-lon1);
-    lat1 = ofDegToRad(lat1);
-    lat2 = ofDegToRad(lat2);
-    
-    float a = sin(dLat/2) * sin(dLat/2)+sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2); 
-    float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
-    float d = R * c;
-    return d;
-}*/

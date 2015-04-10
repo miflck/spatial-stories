@@ -34,12 +34,11 @@ public:
 
     
     bool isInside;
-    
     bool getIsInside();
     
-void setup();
-void update();
-void draw();
+    void setup();
+    void update();
+    void draw();
     void clear();
 
     
