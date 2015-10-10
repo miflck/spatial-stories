@@ -93,7 +93,7 @@ void draw();
     
     
     bool bLoadAudio;
-    void loadAudioUrlwithPath(string _path);
+    void loadAudioUrlwithPath(string _path, string _filename);
     void urlResponse(ofHttpResponse & response);
     
     

@@ -230,18 +230,36 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
         string filepath = points[i]["filepath"].asString();
         vector <string> rawfile= ofSplitString(filepath, "/");
         
+        cout<<rawfile.size()<<endl;
+        
         string file = ofSplitString(rawfile.back(), "_")[0];
         string ending = ofSplitString(rawfile.back(), ".")[1];
 
-        string corefile=file+"."+ending;
-        string teaserfile = file+"_teaser."+ending;
+        string corefilename=file+"."+ending;
+        string teaserfilename = file+"_teaser."+ending;
 
-        ofDirectory coredir(ofxiPhoneGetDocumentsDirectory() +corefile);
-        ofDirectory teaserdir(ofxiPhoneGetDocumentsDirectory() +teaserfile);
+        ofDirectory coredir(ofxiPhoneGetDocumentsDirectory() +corefilename);
+        ofDirectory teaserdir(ofxiPhoneGetDocumentsDirectory() +teaserfilename);
+        
+        
+        
 
-        cout<<"i want "<<corefile<<" "<<teaserfile<<endl;
-        if(!coredir.exists() && corefile!="nofile" && bLoadAudio)loadAudioUrlwithPath(corefile);
-        if(!teaserdir.exists() && teaserfile!="nofile" && bLoadAudio)loadAudioUrlwithPath(teaserfile);
+        cout<<"i want "<<corefilename<<" "<<teaserfilename<<endl;
+        string path;
+        
+        for(int i=0;i<rawfile.size()-1;i++){
+            path+=rawfile[i]+"/";
+        }
+        cout<<"my Path "<<path<<endl;
+        
+        string corefilepath;
+        string teaserfilepath;
+        corefilepath=path+file+"."+ending;
+        teaserfilepath=path+file+"_teaser."+ending;
+        
+        
+        if(!coredir.exists() && corefilename!="nofile" && bLoadAudio)loadAudioUrlwithPath(corefilepath,corefilename);
+        if(!teaserdir.exists() && teaserfilename!="nofile" && bLoadAudio)loadAudioUrlwithPath(teaserfilepath,teaserfilename);
     }
     
     
@@ -267,6 +285,7 @@ void Soundcontroller::setPoints(ofxJSONElement _result){
         rad/=1000;
         float teaserradius=ofToFloat(sTeaserRad);
         teaserradius/=1000;
+        cout<<"try create soundobject"<<endl;
         
         tempPos.set(dlat,dlng);
         so.setPosition(tempPos);
@@ -309,7 +328,7 @@ void Soundcontroller::loadUrlwithPath(string _path){
     {
         cout << result.getRawString() << endl;
         
-        cout<<ofxiPhoneGetDocumentsDirectory()<<endl;
+        cout<<"Dir " <<ofxiPhoneGetDocumentsDirectory()<<endl;
         ofFile file(ofxiPhoneGetDocumentsDirectory() +"mySavedPoints.txt",ofFile::WriteOnly);
         file << response.getRawString() << endl;
         file.close();
@@ -355,7 +374,7 @@ void Soundcontroller::urlResponse(ofHttpResponse & response) {
 
 //--------------------------------------------------------------
 
-void Soundcontroller::loadAudioUrlwithPath(string _path){
+void Soundcontroller::loadAudioUrlwithPath(string _path, string _filename){
     
     cout<<"loading audiofile"<<endl;
     
@@ -363,13 +382,17 @@ void Soundcontroller::loadAudioUrlwithPath(string _path){
     
   //  int id = ofLoadURLAsync("http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path,
   //                          "async_req");
-    string DDoSTarget = "http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path;
-
+   // string DDoSTarget = "http://spatialstories.michaelflueckiger.ch/media/upload/audio/"+_path;
+    string DDoSTarget = "http://spatialstories.michaelflueckiger.ch/"+_path;
+    
+    
+    
+    
     
  //  string URL                 = '[http://www.w3schools.com/xml/note.xml';](http://www.w3schools.com/xml/note.xml';)
     
   //  ofLoadURLAsync(DDoSTarget, "async_req");
-    ofSaveURLAsync(DDoSTarget, ofxiPhoneGetDocumentsDirectory()+_path);
+    ofSaveURLAsync(DDoSTarget, ofxiPhoneGetDocumentsDirectory()+_filename);
 
     
     
